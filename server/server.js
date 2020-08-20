@@ -2,23 +2,43 @@ const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const http = require('http');
 const path = require('path');
-const { fileLoader, mergeTypes } = require('merge-graphql-schemas');
+const {
+  fileLoader,
+  mergeTypes,
+  mergeResolvers,
+} = require('merge-graphql-schemas');
+const mongoose = require('mongoose');
 
 require('dotenv').config();
 
 // express server
 const app = express();
 
+// db
+const db = async () => {
+  try {
+    const success = mongoose.connect(process.env.DATABASE_CLOUD, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+    });
+    console.log('DB connected');
+  } catch (error) {
+    console.log('DB connection error.', error);
+  }
+};
+
+// excute database connection
+db();
+
 // typeDefs
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './typeDefs')));
 
-//resolvers
-const resolvers = {
-  Query: {
-    totalPosts: () => 42,
-    me: () => 'koga',
-  },
-};
+// resolvers
+const resolvers = mergeResolvers(
+  fileLoader(path.join(__dirname, './resolvers'))
+);
 
 //graphQL server
 const apolloServer = new ApolloServer({
@@ -36,6 +56,12 @@ const httpserver = http.createServer(app);
 app.get('/rest', (req, res) => {
   res.json({
     data: 'you hit rest endpoint',
+  });
+});
+
+app.get('/', (req, res) => {
+  res.json({
+    data: 'まいど',
   });
 });
 
