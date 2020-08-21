@@ -9,7 +9,8 @@ const Nav = () => {
 
   const { user } = state;
 
-  const logout = () => {
+  const logout = (e) => {
+    e.preventDefault();
     auth.signOut();
     dispatch({
       type: 'LOGGED_IN_USER',
