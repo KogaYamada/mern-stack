@@ -10,6 +10,7 @@ const {
 const mongoose = require('mongoose');
 
 require('dotenv').config();
+const { authCheck } = require('./helpers/auth');
 
 // express server
 const app = express();
@@ -44,6 +45,7 @@ const resolvers = mergeResolvers(
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req, res }) => ({ req, res }),
 });
 
 // applyMddleware method connects ApolloServer to a specific HTTP framework ie: express
@@ -53,7 +55,7 @@ apolloServer.applyMiddleware({ app });
 const httpserver = http.createServer(app);
 
 // rest endpoint
-app.get('/rest', (req, res) => {
+app.get('/rest', authCheck, (req, res) => {
   res.json({
     data: 'you hit rest endpoint',
   });

@@ -1,10 +1,15 @@
 const { gql } = require('apollo-server-express');
+const { authCheck } = require('../helpers/auth');
 
 const { posts } = require('../temp');
 
 // queries
 const totalPosts = () => posts.length;
-const allPosts = () => posts;
+// contextはserver.jsのapolloServerのコンストラクター
+const allPosts = async (parent, args, context) => {
+  await authCheck(context.req);
+  return posts;
+};
 
 // mutations
 const newPost = (parrent, args, context) => {
