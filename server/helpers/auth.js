@@ -9,6 +9,7 @@ admin.initializeApp({
 
 exports.authCheck = async (req) => {
   try {
+    // firebase authのユーザー情報
     const currentUser = await admin.auth().verifyIdToken(req.headers.authtoken);
     console.log('current user', currentUser);
     return currentUser;
