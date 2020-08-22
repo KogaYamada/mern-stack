@@ -1,12 +1,13 @@
 const { gql } = require('apollo-server-express');
 const shortid = require('shortid');
+const { DateTimeResolver } = require('graphql-scalars');
 const { authCheck } = require('../helpers/auth');
 const User = require('../models/user');
 
 // contextはserver.jsのapolloServerのコンストラクター
-const me = async (parent, args, context) => {
-  await authCheck(context.req);
-  return 'koga';
+const profile = async (parent, args, context) => {
+  const currentUser = await authCheck(context.req);
+  return User.findOne({ email: currentUser.email }).exec();
 };
 
 const userCreate = async (parent, args, context) => {
@@ -34,7 +35,7 @@ const userUpdate = async (parent, args, context) => {
 
 module.exports = {
   Query: {
-    me,
+    profile,
   },
   Mutation: {
     userCreate,

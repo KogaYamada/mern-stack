@@ -1,4 +1,6 @@
 const { gql } = require('apollo-server-express');
+const { DateTimeResolver } = require('graphql-scalars');
+
 const { authCheck } = require('../helpers/auth');
 
 const { posts } = require('../temp');
