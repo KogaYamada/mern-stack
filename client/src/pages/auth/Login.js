@@ -1,8 +1,19 @@
 import React, { useState, useContext } from 'react';
+import { useMutation, gql } from '@apollo/client';
 import { Link, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../context/authContext';
 import { auth, googleAuthProvider } from '../../firebase';
+import AuthForm from '../../components/forms/AuthForm';
+
+const USER_CREATE = gql`
+  mutation userCreate {
+    userCreate {
+      username
+      email
+    }
+  }
+`;
 
 const Login = () => {
   const { dispatch } = useContext(AuthContext);
@@ -12,6 +23,9 @@ const Login = () => {
   const [success, setSuccess] = useState(false);
 
   let history = useHistory();
+
+  // graphQL mutation
+  const [userCreate] = useMutation(USER_CREATE);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +45,7 @@ const Login = () => {
           });
 
           // send user info to our server mongodb to either update/create
-
+          userCreate();
           history.push('/');
         });
     } catch (error) {
@@ -65,35 +79,15 @@ const Login = () => {
       <button onClick={googleLogin} className="btn btn-raised btn-danger mt-5">
         Login With Google
       </button>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Email address</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="form-control"
-            placeholder="Enter Email"
-            disabled={loading}
-          />
-        </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="form-control"
-            placeholder="Enter Password"
-            disabled={loading}
-          />
-        </div>
-        <button
-          className="btn btn-raised btn-primary"
-          disabled={!email || !password || loading}>
-          Submit
-        </button>
-      </form>
+      <AuthForm
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        loading={loading}
+        handleSubmit={handleSubmit}
+        showPasswordInput
+      />
     </div>
   );
 };

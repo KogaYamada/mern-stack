@@ -4,6 +4,7 @@ import { auth } from '../../firebase';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../context/authContext';
+import AuthForm from '../../components/forms/AuthForm';
 
 const USER_CREATE = gql`
   mutation userCreate {
@@ -25,6 +26,7 @@ const CompleteRegistration = () => {
     setEmail(window.localStorage.getItem('emailFormRagistoration'));
   }, [history]);
 
+  // graphQL mutation
   const [userCreate] = useMutation(USER_CREATE);
 
   const handleSubmit = async (e) => {
@@ -73,35 +75,15 @@ const CompleteRegistration = () => {
       ) : (
         <h4>Complete your registration</h4>
       )}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Email address</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="form-control"
-            placeholder="Enter Email"
-            disabled
-          />
-        </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="form-control"
-            placeholder="Enter Password"
-            disabled={loading}
-          />
-        </div>
-        <button
-          className="btn btn-raised btn-primary"
-          disabled={!email || loading}>
-          Submit
-        </button>
-      </form>
+      <AuthForm
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        loading={loading}
+        handleSubmit={handleSubmit}
+        showPasswordInput
+      />
     </div>
   );
 };
