@@ -59,7 +59,7 @@ const CompleteRegistration = () => {
         });
         // make api request to save/update user in mongodb
         userCreate();
-        history.push('/');
+        history.push('/profile');
       }
     } catch (error) {
       console.log(error);

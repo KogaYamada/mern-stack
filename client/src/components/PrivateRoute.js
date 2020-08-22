@@ -14,19 +14,19 @@ const PrivateRoute = ({ children, ...rest }) => {
 
   const navLink = () => (
     <nav>
-      <ul className="nav flex-culumn">
+      <ul className="nav flex-column">
         <li className="nav-item">
-          <Link className="nav-link" to="/update/profile">
+          <Link className="nav-link" to="/profile">
             Profile
           </Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to="/update/password">
+          <Link className="nav-link" to="/password/update">
             Password
           </Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to="/create/post">
+          <Link className="nav-link" to="/post/create">
             Post
           </Link>
         </li>
