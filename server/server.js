@@ -2,12 +2,15 @@ const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const http = require('http');
 const path = require('path');
+const cors = require('cors');
+const { json } = require('body-parser');
 const {
   fileLoader,
   mergeTypes,
   mergeResolvers,
 } = require('merge-graphql-schemas');
 const mongoose = require('mongoose');
+const cloulinary = require('cloudinary');
 
 require('dotenv').config();
 const { authCheck } = require('./helpers/auth');
@@ -33,6 +36,10 @@ const db = async () => {
 // excute database connection
 db();
 
+// middlewares
+app.use(cors());
+app.use(json({ limit: '5mb' }));
+
 // typeDefs
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './typeDefs')));
 
@@ -54,16 +61,20 @@ apolloServer.applyMiddleware({ app });
 // server
 const httpserver = http.createServer(app);
 
+// upload
+app.post('/uploadimages', (req, res) => {
+  cloulinary.uploader.upload(req.body.image, (result) => {
+    res.send({
+      url: result.url,
+      public_id: result.public_id,
+    });
+  });
+});
+
 // rest endpoint
 app.get('/rest', authCheck, (req, res) => {
   res.json({
     data: 'you hit rest endpoint',
-  });
-});
-
-app.get('/', (req, res) => {
-  res.json({
-    data: 'まいど',
   });
 });
 

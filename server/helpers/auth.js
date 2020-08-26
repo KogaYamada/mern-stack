@@ -19,6 +19,22 @@ exports.authCheck = async (req) => {
   }
 };
 
+exports.authCheckMiddleware = (req, res, next) => {
+  if (req.headers.authtoken) {
+    admin
+      .auth()
+      .verifyIdToken(req.headers.authtoken)
+      .then((result) => {
+        next();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } else {
+    res.json({ error: 'unauthorized' });
+  }
+};
+
 /* 練習用
 exports.authCheck = (req, res, next = (f) => f) => {
   if (!req.headers.authtoken) throw new Error('unauthorized');

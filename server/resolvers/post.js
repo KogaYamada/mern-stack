@@ -9,7 +9,6 @@ const { posts } = require('../temp');
 const totalPosts = () => posts.length;
 // contextはserver.jsのapolloServerのコンストラクター
 const allPosts = async (parent, args, context) => {
-  await authCheck(context.req);
   return posts;
 };
 
