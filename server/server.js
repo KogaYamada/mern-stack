@@ -38,7 +38,7 @@ db();
 
 // middlewares
 app.use(cors());
-app.use(json({ limit: '5mb' }));
+app.use(json());
 
 // typeDefs
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './typeDefs')));

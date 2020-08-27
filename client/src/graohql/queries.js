@@ -31,7 +31,7 @@ export const PROFILE = gql`
 export const GET_ALL_POSTS = gql`
   {
     allPosts {
-      id
+      _id
       title
       description
     }

@@ -12,7 +12,10 @@ const postSchema = new mongoose.Schema(
         type: String,
         default: 'https://via.placeholder.com/150?text=POST',
       },
-      public_id: {},
+      public_id: {
+        type: String,
+        default: Date.now,
+      },
     },
     postedBy: {
       type: ObjectId,
