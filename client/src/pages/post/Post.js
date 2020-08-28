@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useQuery, useMutation } from '@apollo/client';
 import { AuthContext } from '../../context/authContext';
 import { POST_CREATE } from '../../graohql/mutations';
+import { POST_BY_USER } from '../../graohql/queries';
 
 const initialState = {
   content: '',
@@ -15,11 +16,15 @@ const initialState = {
 const Post = () => {
   const [values, setValues] = useState(initialState);
   const [loading, setLoading] = useState(false);
+  // query
+  const { data: posts } = useQuery(POST_BY_USER);
 
   // mutation
   const [postCreate] = useMutation(POST_CREATE, {
     // update cache
-    update: (data) => console.log(data),
+    update: (cache, { data: { postCreate } }) => {
+      //read from cache
+    },
     onError: (err) => console.log(err),
   });
 
@@ -72,7 +77,21 @@ const Post = () => {
         {createForm()}
       </div>
       <hr />
-      {JSON.stringify(values.content)}
+      {posts &&
+        posts.postByUser.map((p) => {
+          return (
+            <div className="clo-md-4 p-5" key={p._id}>
+              <div className="card">
+                <div className="card-body">
+                  <div className="card-title">
+                    <h4>@{p.postedBy.username}</h4>
+                  </div>
+                  <p className="card-text">{p.content}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
     </div>
   );
 };

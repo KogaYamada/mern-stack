@@ -37,7 +37,7 @@ const Home = () => {
                 <div className="card">
                   <div className="card-body">
                     <div className="card-title">
-                      <h4>@{p.postedBy.username}</h4>
+                      <h4>@{p.postedBy && p.postedBy.username}</h4>
                     </div>
                     <p className="card-text">{p.content}</p>
                   </div>

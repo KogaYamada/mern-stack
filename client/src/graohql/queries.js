@@ -58,3 +58,16 @@ export const ALL_USERS = gql`
     }
   }
 `;
+
+export const POST_BY_USER = gql`
+  query {
+    postByUser {
+      _id
+      content
+      postedBy {
+        _id
+        username
+      }
+    }
+  }
+`;
