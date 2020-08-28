@@ -32,8 +32,11 @@ export const GET_ALL_POSTS = gql`
   {
     allPosts {
       _id
-      title
-      description
+      content
+      postedBy {
+        _id
+        username
+      }
     }
   }
 `;

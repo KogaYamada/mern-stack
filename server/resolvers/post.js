@@ -27,7 +27,7 @@ const postCreate = async (parent, args, context) => {
 };
 
 const allPosts = async (parent, args) => {
-  return await Post.find({}).exec();
+  return await Post.find({}).populate('postedBy', 'username _id').exec();
 };
 
 const postByUser = async (parent, args, context) => {
