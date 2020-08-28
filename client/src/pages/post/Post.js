@@ -23,7 +23,17 @@ const Post = () => {
   const [postCreate] = useMutation(POST_CREATE, {
     // update cache
     update: (cache, { data: { postCreate } }) => {
-      //read from cache
+      // read Query from cache
+      const { postByUser } = cache.readQuery({
+        query: POST_BY_USER,
+      });
+      // write Query to cache
+      cache.writeQuery({
+        query: POST_BY_USER,
+        data: {
+          postByUser: [postCreate, ...postByUser],
+        },
+      });
     },
     onError: (err) => console.log(err),
   });
@@ -84,7 +94,7 @@ const Post = () => {
               <div className="card">
                 <div className="card-body">
                   <div className="card-title">
-                    <h4>@{p.postedBy.username}</h4>
+                    <h4>@{p.postedBy && p.postedBy.username}</h4>
                   </div>
                   <p className="card-text">{p.content}</p>
                 </div>
