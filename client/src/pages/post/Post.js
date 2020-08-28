@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect, Fragment } from 'react';
 import { toast } from 'react-toastify';
 import { useQuery, useMutation } from '@apollo/client';
 import { AuthContext } from '../../context/authContext';
+import { POST_CREATE } from '../../graohql/mutations';
 
 const initialState = {
   content: '',
@@ -15,7 +16,21 @@ const Post = () => {
   const [values, setValues] = useState(initialState);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {};
+  // mutation
+  const [postCreate] = useMutation(POST_CREATE, {
+    // update cache
+    update: (data) => console.log(data),
+    onError: (err) => console.log(err),
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    postCreate({ variables: { input: values } });
+    setValues(initialState);
+    setLoading(false);
+    toast.success('post created');
+  };
 
   const handleChange = (e) => {
     e.preventDefault();
