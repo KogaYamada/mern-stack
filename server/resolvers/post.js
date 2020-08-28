@@ -41,6 +41,28 @@ const postByUser = async (parent, args, context) => {
     .sort({ createdAt: -1 });
 };
 
+const postUpdate = async (parent, args, context) => {
+  const currentUser = await authCheck(context.req);
+  // validation
+  if (args.input.content.trim() === '') throw new Error('Content is required');
+  // get current user mongodb _id based in email
+  const currentUserFromDb = await User.findOne({
+    email: currentUser.email,
+  }).exec();
+  // _id of post to update
+  const postToUpdate = await Post.findOne({ _id: args.input._id }).exec();
+  // if currentUser id and id of the post's postedBy user id is same, allow update
+  if (currentUserFromDb._id.toString() !== postToUpdate.postedBy._id.toString())
+    throw new Error('unauthorized action');
+  let updatedPost = await Post.findByIdAndUpdate(
+    args.input._id,
+    { ...args.input },
+    { new: true }
+  ).exec();
+
+  return updatedPost;
+};
+
 module.exports = {
   Query: {
     allPosts,
@@ -48,5 +70,6 @@ module.exports = {
   },
   Mutation: {
     postCreate,
+    postUpdate,
   },
 };
